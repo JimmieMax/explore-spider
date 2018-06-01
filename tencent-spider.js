@@ -17,12 +17,13 @@ const writeXlsx = datas => {
 //该函数的作用：在本地存储所爬取的新闻内容资源
 const savedContent = $ => {
     let datas = [];
-    datas.push(['标题', '阅读量']);
+    datas.push(['标题', '阅读量', '时间']);
     $('.figures_list li').each(function (index, item) {
-        let x = $(this).find('strong a').text();
-        let y = $(this).find('.figure_info .info_inner').text();
-        console.log(x, y);
-        let data = [x, y];
+        let title = $(this).find('strong a').text(),
+            reading = $(this).find('.figure_info .info_inner').text(),
+            time = $(this).find('.figure_info .figure_info_time').text();
+        console.log(title);
+        let data = [title, reading, time];
         datas.push(data);    //一行一行添加的 不是一列一列
     });
     writeXlsx(datas);
