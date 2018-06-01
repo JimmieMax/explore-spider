@@ -1,0 +1,27 @@
+{
+  "name": "explore-spider",
+  "version": "1.0.0",
+  "description": "web spider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JimmieMax/explore-spider.git"
+  },
+  "keywords": [
+    "spider",
+    "cheer.io"
+  ],
+  "author": "Jimmie Max",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JimmieMax/explore-spider/issues"
+  },
+  "homepage": "https://github.com/JimmieMax/explore-spider#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "node-xlsx": "^0.12.0"
+  }
+}

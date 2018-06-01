@@ -1,0 +1,12 @@
+logs/*
+!.gitkeep
+!/bin/*
+
+tmp
+.DS_Store
+.idea
+.project
+npm-debug.log
+
+# Folders
+node_modules/
