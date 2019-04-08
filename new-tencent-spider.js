@@ -41,10 +41,10 @@ const startRequest = (page, url) => {
                     play_count = play_count.replace('万', '') * 10000;
                     list.push([title, play_count, uploadtime]);
                 });
-                if (pageNum == page){
+                if (pageNum == page) {
                     writeXlsx(list);
                     console.log('Complete')
-                }else{
+                } else {
                     pageNum++;
                     startRequest(page, url);
                 }
@@ -57,4 +57,8 @@ const startRequest = (page, url) => {
 
 };
 
+/**
+ * @param {Number} pageNum 页码
+ * @param {String} url 访问的url
+ */
 startRequest(3, "http://c.v.qq.com/vchannelinfo?otype=json&uin=ea1b1b8626787db2d198c58fb86eb4dc&qm=1&num=24&sorttype=0&orderflag=0&low_login=1&_=1554648724958&callback=callback"); //主程序开始运行
