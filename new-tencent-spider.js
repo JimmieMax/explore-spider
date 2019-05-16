@@ -18,9 +18,12 @@ const writeXlsx = data => {
         'flag': 'w'
     }); //生成excel
 };
+const toDate = (year, month, date) => new Date(year, month + 1, date);
 
 // let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582&callback=callback';
 let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=2955448967&page_size=20&_=1557817147319&callback=callback';
+const begin = toDate(2019, 4, 15);
+const end = toDate(2019, 5, 15);
 
 const startRequest = () => {
     const newUrl = url + '&page_index=' + pageNum;
@@ -48,16 +51,17 @@ const startRequest = () => {
                     title = title.replace(/,/g, "，").replace(/:/g, "：")
                     view_all_count = Number(view_all_count);
                     const d = new Date(Date.parse(create_time.replace(/-/g, "/")));
-                    const month = d.getMonth();
+                    const year = d.getFullYear();
+                    const month = d.getMonth()+1;
                     const date = d.getDate();
-                    console.log(month, date)
-                    if (date >= 6 && date <= 12) {
+                    const now = toDate(year,month, date);
+                    if (now >= begin && now <= end) {
                         list.push([title, view_all_count, create_time]);
                     }
-                    lastDate = date;
+                    lastDate = now;
                 });
 
-                if (lastDate <= 5) {
+                if (lastDate < begin) {
                     writeXlsx(list);
                     console.log('Complete')
                 } else {
