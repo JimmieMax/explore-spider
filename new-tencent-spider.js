@@ -9,24 +9,33 @@ let list = [
     ],
     pageNum = 1;
 
-const writeXlsx = data => {
+const writeXlsx = (name, data) => {
     const buffer = xlsx.build([{
         name: 'Tencent Video Reading',
         data
     }]);
-    fs.writeFileSync('./harvest/tencent/新京报-阅读量数据统计.xlsx', buffer, {
+    fs.writeFileSync(`./harvest/tencent/${name}-阅读量数据统计.xlsx`, buffer, {
         'flag': 'w'
     }); //生成excel
 };
 const toDate = (year, month, date) => new Date(year, month + 1, date);
 
+// const options = {
+//     name: '梨视频',
+//     url: 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582&callback=callback'
+// }
+const options = {
+    name: '新京报',
+    url: 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=2955448967&page_size=20&_=1557817147319&callback=callback'
+}
 // let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582&callback=callback';
-let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=2955448967&page_size=20&_=1557817147319&callback=callback';
-const begin = toDate(2019, 4, 15);
-const end = toDate(2019, 5, 15);
+// 新京报
+// let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=2955448967&page_size=20&_=1557817147319&callback=callback';
+const begin = toDate(2019, 5, 13);
+const end = toDate(2019, 5, 19);
 
 const startRequest = () => {
-    const newUrl = url + '&page_index=' + pageNum;
+    const newUrl = options.url + '&page_index=' + pageNum;
     //采用http模块向服务器发起一次get请求
     http.get(newUrl, function (res) {
         let json = ''; //用来存储请求网页的整个html内容
@@ -52,9 +61,9 @@ const startRequest = () => {
                     view_all_count = Number(view_all_count);
                     const d = new Date(Date.parse(create_time.replace(/-/g, "/")));
                     const year = d.getFullYear();
-                    const month = d.getMonth()+1;
+                    const month = d.getMonth() + 1;
                     const date = d.getDate();
-                    const now = toDate(year,month, date);
+                    const now = toDate(year, month, date);
                     if (now >= begin && now <= end) {
                         list.push([title, view_all_count, create_time]);
                     }
@@ -62,10 +71,10 @@ const startRequest = () => {
                 });
 
                 if (lastDate < begin) {
-                    writeXlsx(list);
-                    console.log('Complete')
+                    writeXlsx(options.name, list);
+                    console.log('Complete!')
                 } else {
-                    console.log('Continue')
+                    console.log('Continue...')
                     pageNum++;
                     startRequest();
                 }
@@ -78,8 +87,4 @@ const startRequest = () => {
 
 };
 
-/**
- * @param {Number} pageNum 页码
- * @param {String} url 访问的url
- */
 startRequest(); //主程序开始运行
