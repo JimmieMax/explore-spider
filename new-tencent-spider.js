@@ -1,4 +1,5 @@
 //http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&callback=jQuery191009402303422004277_1557815763578&iSortType=0&page_index=1&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582
+
 const
     http = require('http'),
     fs = require('fs'),
@@ -20,21 +21,20 @@ const writeXlsx = (name, data) => {
 };
 const toDate = (year, month, date) => new Date(year, month + 1, date);
 
-// const options = {
-//     name: '梨视频',
-//     url: 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582&callback=callback'
-// }
-const options = {
+const LISHIPIN = {
+    index: 1,
+    name: '梨视频',
+    url: 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582&callback=callback'
+}
+
+const XINJINGBAO = {
+    index: 2,
     name: '新京报',
     url: 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=2955448967&page_size=20&_=1557817147319&callback=callback'
 }
-// let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582&callback=callback';
-// 新京报
-// let url = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&stUserId=2955448967&page_size=20&_=1557817147319&callback=callback';
-const begin = toDate(2019, 5, 13);
-const end = toDate(2019, 5, 19);
 
-const startRequest = () => {
+const startRequest = (type) => {
+    const options = type == 1 ? LISHIPIN : XINJINGBAO;
     const newUrl = options.url + '&page_index=' + pageNum;
     //采用http模块向服务器发起一次get请求
     http.get(newUrl, function (res) {
@@ -87,4 +87,7 @@ const startRequest = () => {
 
 };
 
-startRequest(); //主程序开始运行
+const begin = toDate(2019, 5, 13);
+const end = toDate(2019, 5, 19);
+
+startRequest(1); //主程序开始运行
