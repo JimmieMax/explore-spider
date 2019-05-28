@@ -34,7 +34,7 @@ const XINJINGBAO = {
 }
 
 const startRequest = (type) => {
-    const options = type == 1 ? LISHIPIN : XINJINGBAO;
+    const options = type == LISHIPIN.index ? LISHIPIN : XINJINGBAO;
     const newUrl = options.url + '&page_index=' + pageNum;
     //采用http模块向服务器发起一次get请求
     http.get(newUrl, function (res) {
@@ -76,7 +76,7 @@ const startRequest = (type) => {
                 } else {
                     console.log('Continue...')
                     pageNum++;
-                    startRequest();
+                    startRequest(type);
                 }
             }
             eval(json);
@@ -87,7 +87,7 @@ const startRequest = (type) => {
 
 };
 
-const begin = toDate(2019, 5, 13);
-const end = toDate(2019, 5, 19);
+const begin = toDate(2019, 5, 20);
+const end = toDate(2019, 5, 26);
 
-startRequest(1); //主程序开始运行
+startRequest(2); //主程序开始运行
