@@ -59,6 +59,10 @@ const startRequest = (type) => {
                     console.log(title, view_all_count, create_time)
                     title = title.replace(/,/g, "，").replace(/:/g, "：")
                     view_all_count = Number(view_all_count);
+                    if(!create_time){
+                        console.log('数据有错误，请重试！');
+                        return;
+                    }
                     const d = new Date(Date.parse(create_time.replace(/-/g, "/")));
                     const year = d.getFullYear();
                     const month = d.getMonth() + 1;
@@ -87,7 +91,7 @@ const startRequest = (type) => {
 
 };
 
-const begin = toDate(2019, 5, 20);
-const end = toDate(2019, 5, 26);
+const begin = toDate(2019, 9, 9);
+const end = toDate(2019, 9, 15);
 
 startRequest(2); //主程序开始运行
