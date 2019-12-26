@@ -4,8 +4,7 @@
   "description": "web spider",
   "main": "index.js",
   "scripts": {
-    "tencent": "node new-tencent-spider.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tencent": "node new-tencent-spider.js"
   },
   "repository": {
     "type": "git",
