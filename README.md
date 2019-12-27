@@ -3,7 +3,6 @@
 
 ## Tech Stack :strawberry:
  - [Node](https://nodejs.org)
- - [Cheerio](https://cheerio.js.org)
  - [Node-xlsx](https://github.com/mgcrea/node-xlsx)
 
 ## Installation :green_apple:
@@ -15,7 +14,6 @@ $ npm install
 
 ## Run tasks :banana:
 ```
-//tencent spider http://v.qq.com/vplus/wevideo/videos
 node tencent-spider
 ```
 
