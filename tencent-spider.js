@@ -1,9 +1,7 @@
 //http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&callback=jQuery191009402303422004277_1557815763578&iSortType=0&page_index=1&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582
 
-const
-    http = require('http'),
-    fs = require('fs'),
-    xlsx = require('node-xlsx');
+const fs = require('fs');
+const xlsx = require('node-xlsx');
 const axios = require('axios');
 
 const toDate = (year, month, date) => new Date(year, month + 1, date);
@@ -74,8 +72,8 @@ const request = async (options) => {
                 writeXlsx(options.name, options.list);
                 console.log(`${options.name} Complete!`)
             } else {
-                console.log(`${options.name} ${lastDate} Continue...`)
                 options.pageNum++;
+                console.log(`${options.name}：第${options.pageNum}页 Continue...`)
                 request(options);
             }
         }
