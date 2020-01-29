@@ -5,7 +5,7 @@ const xlsx = require('node-xlsx');
 const axios = require('axios');
 
 const toDate = (year, month, date) => new Date(year, month + 1, date);
-const BaseUrl = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&page_size=20&_=1557817147319&callback=callback'
+const BaseUrl = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&page_size=20&_=1557817147319&callback=callback';
 const RequestList = [{
         name: '梨视频',
         stUserId: '769563763',
@@ -14,7 +14,7 @@ const RequestList = [{
     },
     {
         name: '新京报',
-        stUserId: '2955448967',
+        stUserId: '1067100003', // '2955448967',
         pageNum: 1,
         list: []
     },
@@ -85,5 +85,5 @@ RequestList.forEach((options)=>{
     request(options);
 });
 
-const begin = toDate(2019, 12, 16);
-const end = toDate(2019, 12, 22);
+const begin = toDate(2020, 1, 20);
+const end = toDate(2020, 1, 26);
