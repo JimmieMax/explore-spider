@@ -1,52 +1,89 @@
-const
-    http = require('http'),
-    fs = require('fs'),
-    cheerio = require('cheerio'),
-    xlsx = require('node-xlsx');
+//http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&callback=jQuery191009402303422004277_1557815763578&iSortType=0&page_index=1&hasMore=true&stUserId=769563763&page_size=20&_=1557815763582
 
-const writeXlsx = datas => {
-    let buffer = xlsx.build([
-        {
-            name: 'Tencent Video Reading',
-            data: datas
+const fs = require('fs');
+const xlsx = require('node-xlsx');
+const axios = require('axios');
+
+const toDate = (year, month, date) => new Date(year, month + 1, date);
+const BaseUrl = 'http://access.video.qq.com/pc_client/GetUserVidListPage?vappid=50662744&vsecret=64b037e091deae75d3840dbc5d565c58abe9ea733743bbaf&iSortType=0&hasMore=true&page_size=20&_=1557817147319&callback=callback'
+const RequestList = [{
+        name: '梨视频',
+        stUserId: '769563763',
+        pageNum: 1,
+        list: []
+    },
+    {
+        name: '新京报',
+        stUserId: '2955448967',
+        pageNum: 1,
+        list: []
+    },
+    {
+        name: '青蜂侠',
+        stUserId: '2209767239',
+        pageNum: 1,
+        list: []
+    },
+]
+// 生成excel
+const writeXlsx = (name, data) => {
+    data.unshift(['标题', '阅读量', '时间']);
+    const buffer = xlsx.build([{
+        name: 'Tencent Video Reading',
+        data
+    }]);
+    fs.writeFileSync(`./harvest/tencent/${name}-阅读量数据统计.xlsx`, buffer, {
+        'flag': 'w'
+    }); 
+};
+// 发起请求
+const request = async (options) => {
+    const url = `${BaseUrl}&stUserId=${options.stUserId}&page_index=${options.pageNum}`;
+    await axios.get(url).then((res)=>{
+        function callback(data) {
+            const videoList = data.data.vecVidInfo;
+            let lastDate;
+            videoList.forEach(({
+                mapKeyValue: {
+                    title,
+                    view_all_count,
+                    create_time
+                }
+            }) => {
+                console.log(title, view_all_count, create_time)
+                title = title.replace(/,/g, "，").replace(/:/g, "：")
+                view_all_count = Number(view_all_count);
+                if (!create_time) {
+                    console.log('数据有错误，请重试！');
+                    return;
+                }
+                const d = new Date(Date.parse(create_time.replace(/-/g, "/")));
+                const year = d.getFullYear();
+                const month = d.getMonth() + 1;
+                const date = d.getDate();
+                const now = toDate(year, month, date);
+                if (now >= begin && now <= end) {
+                    options.list.push([title, view_all_count, create_time]);
+                }
+                lastDate = now;
+            });
+
+            if (lastDate < begin) {
+                writeXlsx(options.name, options.list);
+                console.log(`${options.name} Complete!`)
+            } else {
+                options.pageNum++;
+                console.log(`${options.name}：第${options.pageNum}页 Continue...`)
+                request(options);
+            }
         }
-    ]);
-    fs.writeFileSync('./harvest/tencent/1.xlsx', buffer, {'flag': 'w'});   //生成excel
-};
+        eval(res.data);
+    })
+}
 
-//该函数的作用：在本地存储所爬取的新闻内容资源
-const savedContent = $ => {
-    let datas = [];
-    datas.push(['标题', '阅读量', '时间']);
-    $('.figures_list li').each(function (index, item) {
-        let title = $(this).find('strong a').text(),
-            reading = $(this).find('.figure_info .info_inner').text(),
-            time = $(this).find('.figure_info .figure_info_time').text();
-        console.log(title);
-        let data = [title, reading, time];
-        datas.push(data);    //一行一行添加的 不是一列一列
-    });
-    writeXlsx(datas);
-};
+RequestList.forEach((options)=>{
+    request(options);
+});
 
-const startRequest = x => {
-    //采用http模块向服务器发起一次get请求
-    http.get(x, function (res) {
-        let html = '';        //用来存储请求网页的整个html内容
-        res.setEncoding('utf-8'); //防止中文乱码
-        //监听data事件，每次取一块数据
-        res.on('data', function (chunk) {
-            html += chunk;
-        });
-        //监听end事件，如果整个网页内容的html都获取完毕，就执行回调函数
-        res.on('end', function () {
-            let $ = cheerio.load(html); //采用cheerio模块解析html
-            savedContent($);  //存储每篇文章的内容及文章标题
-        });
-    }).on('error', function (err) {
-        console.log(err);
-    });
-
-};
-
-startRequest("http://v.qq.com/vplus/wevideo/videos");      //主程序开始运行
+const begin = toDate(2019, 12, 16);
+const end = toDate(2019, 12, 22);

@@ -4,15 +4,18 @@
   "description": "web spider",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "tencent": "node new-tencent-spider.js"
+=======
+    "tencent": "node tencent-spider.js"
+>>>>>>> b2b4e11d3ce51e32b038dc8567a17d4a0482de7c
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JimmieMax/explore-spider.git"
   },
   "keywords": [
-    "spider",
-    "cheer.io"
+    "spider"
   ],
   "author": "Jimmie Max",
   "license": "ISC",
@@ -22,7 +25,6 @@
   "homepage": "https://github.com/JimmieMax/explore-spider#readme",
   "dependencies": {
     "axios": "^0.19.0",
-    "cheerio": "^1.0.0-rc.2",
     "node-xlsx": "^0.12.0"
   }
 }
